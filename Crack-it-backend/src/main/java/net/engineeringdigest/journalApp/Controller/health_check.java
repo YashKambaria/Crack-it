@@ -1,14 +1,17 @@
 package net.engineeringdigest.journalApp.Controller;
 
-import org.springframework.web.bind.annotation.*;
 
-@CrossOrigin(origins = "http://localhost:5173") // Allow frontend requests
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 @RestController
-@RequestMapping("/health-check")
+@CrossOrigin(origins = "http://localhost:5173")
 public class health_check {
-	
-	@GetMapping("")
-	public String health(){
-		return "All working fine";
+	@GetMapping("/health-check")
+	public String healthCheck() {
+		return "all running fine";
 	}
 }

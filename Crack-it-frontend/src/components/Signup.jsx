@@ -1,12 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 const Signup = () => {
   const navigate = useNavigate(); // Hook for navigation
 
   const [formData, setFormData] = useState({
-    name: "",
+    username: "", // Changed from name to username
     email: "",
     phone: "",
     password: "",
@@ -30,7 +30,7 @@ const Signup = () => {
     const phoneRegex = /^[6-9]\d{9}$/;
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-    if (!formData.name.trim()) newErrors.name = "Name is required";
+    if (!formData.username.trim()) newErrors.username = "Username is required"; // Changed from name to username
     if (!emailRegex.test(formData.email)) newErrors.email = "Enter a valid email address";
     if (!phoneRegex.test(formData.phone)) newErrors.phone = "Enter a valid 10-digit phone number starting with 6-9";
     if (formData.password.length < 6) newErrors.password = "Password must be at least 6 characters";
@@ -58,7 +58,7 @@ const Signup = () => {
     e.preventDefault();
     if (validateForm()) {
       const newUser = {
-        name: formData.name,
+        username: formData.username, // Changed from name to username
         email: formData.email,
         phone: formData.phone,
         password: formData.password,
@@ -69,7 +69,7 @@ const Signup = () => {
       alert("Signup successful!");
 
       setFormData({
-        name: "",
+        username: "", // Changed from name to username
         email: "",
         phone: "",
         password: "",
@@ -95,16 +95,16 @@ const Signup = () => {
             <h2 className="text-center mb-4">Sign Up</h2>
             <form onSubmit={handleSubmit}>
               <div className="mb-3">
-                <label className="form-label">Full Name</label>
+                <label className="form-label">Username</label> {/* Changed label from Full Name to Username */}
                 <input
                   type="text"
-                  className={`form-control ${errors.name ? "is-invalid" : ""}`}
-                  name="name"
-                  value={formData.name}
+                  className={`form-control ${errors.username ? "is-invalid" : ""}`} // Changed from name to username
+                  name="username" // Changed from name to username
+                  value={formData.username} // Changed from name to username
                   onChange={handleChange}
-                  placeholder="Enter your full name"
+                  placeholder="Enter your username" // Changed from Full Name to Username
                 />
-                {errors.name && <div className="invalid-feedback">{errors.name}</div>}
+                {errors.username && <div className="invalid-feedback">{errors.username}</div>} {/* Changed from name to username */}
               </div>
 
               <div className="mb-3">
