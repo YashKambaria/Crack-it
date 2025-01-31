@@ -1,21 +1,24 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 
 const Signup = () => {
+  const navigate = useNavigate(); // Hook for navigation
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    phone: "",
     password: "",
     confirmPassword: "",
   });
 
   const [errors, setErrors] = useState({});
-  const [userData, setUserData] = useState([]);  // State to store array of users
+  const [userData, setUserData] = useState([]);
 
-  // useEffect to log userData when it changes
   useEffect(() => {
-    console.log(userData);  // Log userData when it is updated
-  }, [userData]);  // Only run this effect when userData changes
+    console.log(userData);
+  }, [userData]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -23,39 +26,64 @@ const Signup = () => {
 
   const validateForm = () => {
     let newErrors = {};
+
+    const phoneRegex = /^[6-9]\d{9}$/;
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
     if (!formData.name.trim()) newErrors.name = "Name is required";
-    if (!formData.email.includes("@")) newErrors.email = "Enter a valid email";
-    if (formData.password.length < 6)
-      newErrors.password = "Password must be at least 6 characters";
-    if (formData.password !== formData.confirmPassword)
-      newErrors.confirmPassword = "Passwords do not match";
-    
+    if (!emailRegex.test(formData.email)) newErrors.email = "Enter a valid email address";
+    if (!phoneRegex.test(formData.phone)) newErrors.phone = "Enter a valid 10-digit phone number starting with 6-9";
+    if (formData.password.length < 6) newErrors.password = "Password must be at least 6 characters";
+    if (formData.password !== formData.confirmPassword) newErrors.confirmPassword = "Passwords do not match";
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const validateUser = async (userData) => {
+    try {
+      const response = await axios.post(
+        "http://localhost:8080/api/register", // Replace with your Spring Boot backend URL
+        userData
+      );
+      console.log(response.data); // Handle success response from backend
+      return true; // Return true if registration is successful
+    } catch (error) {
+      console.error("Error during registration", error);
+      return false; // Return false if registration fails
+    }
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      // Store the form data in a JSON array (userData)
       const newUser = {
         name: formData.name,
         email: formData.email,
+        phone: formData.phone,
         password: formData.password,
       };
 
-      // Update the userData array
       setUserData((prevData) => [...prevData, newUser]);
 
       alert("Signup successful!");
 
-      // Reset form data after successful signup
       setFormData({
         name: "",
         email: "",
+        phone: "",
         password: "",
         confirmPassword: "",
       });
+
+      // Call validateUser (which sends data to backend)
+      const userVerified = await validateUser(newUser); // Send newUser data to backend
+
+      if (userVerified) {
+        navigate("/dashboard"); // Redirect to home if validation passes
+      } else {
+        navigate("/signup"); // Stay on signup if validation fails
+      }
     }
   };
 
@@ -90,6 +118,19 @@ const Signup = () => {
                   placeholder="Enter your email"
                 />
                 {errors.email && <div className="invalid-feedback">{errors.email}</div>}
+              </div>
+
+              <div className="mb-3">
+                <label className="form-label">Phone Number</label>
+                <input
+                  type="tel"
+                  className={`form-control ${errors.phone ? "is-invalid" : ""}`}
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleChange}
+                  placeholder="Enter your phone number"
+                />
+                {errors.phone && <div className="invalid-feedback">{errors.phone}</div>}
               </div>
 
               <div className="mb-3">
