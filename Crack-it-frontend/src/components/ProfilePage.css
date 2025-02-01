@@ -1,0 +1,74 @@
+.user_info_parent {
+    height: 24vh;
+    /* background-color: blue; */
+}
+
+.container_left {
+    width: 30%;
+    height: 100%;
+}
+
+.container_right {
+    width: 70%;
+    height: 100%;
+    /* background-color: red; */
+}
+
+.container_right {
+    justify-content: flex-end;
+    /* background: linear-gradient(to left, rgba(255, 255, 255, 0) 50%, rgba(255, 255, 255, 1));
+    animation: fadeIn infinite ease-in-out;
+    background-color: red; */
+    mask-image: linear-gradient(to right, rgba(0, 0, 0, 0) 2%, rgba(0, 0, 0, 1));
+}
+
+.user_info_month_container {
+    height: 100%;
+    width: 21%;
+    flex-direction: column;
+    margin-left: 10px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.user_info_month {
+    height: 85%;
+    width: 100%;
+    flex-direction: column;
+    flex-wrap: wrap;
+    padding: 8px 100px 8px 8px;
+    background-color: rgb(219, 219, 219);
+    border-radius: 3px;
+}
+
+.user_info_day {
+    height: 16px;
+    width: 16px;
+    aspect-ratio: 1/1;
+    background-color: rgb(167, 167, 167);
+    margin: 1px;
+    border-radius: 2px;
+}
+
+.user_streak_day {
+    background-color: rgb(79, 165, 79);
+}
+
+.user_info_upcoming_day {
+    background-color: rgb(206, 206, 206);
+}
+
+.user_info_month_name {
+    height: 15%;
+    width: 100%;
+    text-align: center;
+    margin: auto;
+    /* background-color: red; */
+}
