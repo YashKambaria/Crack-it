@@ -3,8 +3,7 @@ import { useEffect, useState } from "react";
 import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
-
-
+import ProtectedRoute from "./components/ProtectedRoute"; // Import ProtectedRoute
 
 function HealthCheck() {
   const [message, setMessage] = useState("Checking backend...");
@@ -30,12 +29,19 @@ function App() {
     <Router>
       <div className="container my-5">
         <Routes>
-          {/* Use the HealthCheck component for the "/" route */}
           <Route path="/" element={<HealthCheck />} />
-          <Route path="/dashboard" element={<Dashboard />} />
+          {/* Protect the dashboard route */}
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
-          <Route path="*" element={<h1>404 Not Found</h1>} /> {/* Catch all invalid routes */}
+          <Route path="*" element={<h1>404 Not Found</h1>} />
         </Routes>
       </div>
     </Router>

@@ -1,7 +1,11 @@
-import { Link } from "react-router-dom";
-import React, { useState } from "react";
+import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import axios from "axios";
+import { setToken } from "../utils/jwtUtil"; // Import the setToken function
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -24,12 +28,23 @@ const Login = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      setMessage("Login successful! ✅");
-    } else {
-      setMessage("");
+      try {
+        const response = await axios.post("http://localhost:8080/api/login", formData);
+        
+        if (response.data.token) {
+          setToken(response.data.token); // Store JWT token
+          setMessage("Login successful! ✅");
+          navigate("/dashboard"); // Redirect to dashboard after login
+        } else {
+          setMessage("Login failed. Please check your credentials.");
+        }
+      } catch (error) {
+        setMessage("An error occurred. Please try again.");
+        console.error("Error during login:", error);
+      }
     }
   };
 
@@ -73,7 +88,7 @@ const Login = () => {
             </form>
 
             <p className="text-center mt-3">
-              Don't have an account? <Link to="/signup">Sign up</Link>
+              Do not have an account? <Link to="/signup">Sign up</Link>
             </p>
           </div>
         </div>

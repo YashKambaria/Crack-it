@@ -17,7 +17,7 @@ const Signup = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: "" }); // Clear error when user types
+    setErrors({ ...errors, [e.target.name]: "" });
   };
 
   const validateForm = () => {
@@ -35,21 +35,6 @@ const Signup = () => {
     return Object.keys(newErrors).length === 0;
   };
 
-  const validateUser = async (userData) => {
-    try {
-      const response = await axios.post("http://localhost:8080/api/register", userData);
-
-      console.log(response.data);
-      return { success: true, message: "Registration successful!" };
-    } catch (error) {
-      if (error.response && error.response.data && error.response.data.error) {
-        return { success: false, message: error.response.data.error };
-      }
-      console.error("Error during registration", error);
-      return { success: false, message: "An unexpected error occurred. Please try again." };
-    }
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -61,20 +46,23 @@ const Signup = () => {
         password: formData.password,
       };
 
-      const result = await validateUser(newUser);
-
-      if (!result.success) {
-        setErrors({ general: result.message });
-      } else {
-        alert(result.message);
-        setFormData({
-          username: "",
-          email: "",
-          phone: "",
-          password: "",
-          confirmPassword: "",
-        });
-        navigate("/dashboard");
+      try {
+        const response = await axios.post("http://localhost:8080/api/register", newUser);
+        if (response.status === 201) {
+          alert("Registration successful!");
+          setFormData({
+            username: "",
+            email: "",
+            phone: "",
+            password: "",
+            confirmPassword: "",
+          });
+          navigate("/login");
+        }
+      } catch (error) {
+        if (error.response && error.response.data.error) {
+          setErrors({ general: error.response.data.error });
+        }
       }
     }
   };
