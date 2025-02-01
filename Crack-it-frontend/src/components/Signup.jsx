@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
+import './Signup.css'
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -68,10 +69,10 @@ const Signup = () => {
   };
 
   return (
-    <div className="container mt-5">
+    <div className="page_container container mt-5">
       <div className="row justify-content-center">
         <div className="col-md-6">
-          <div className="card shadow-lg p-4">
+          <div className="card shadow-lg p-4 form_container">
             <h2 className="text-center mb-4">Sign Up</h2>
             <form onSubmit={handleSubmit}>
               <div className="mb-3">

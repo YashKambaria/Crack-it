@@ -32,7 +32,7 @@ const DashboardSidebar = () => {
           </Link>
         </li>
         <li>
-          <Link to="/settings" className="nav-link text-white">
+          <Link to="/task" className="nav-link text-white">
             <i className="bi bi-gear me-2"></i> Task Manager
           </Link>
         </li>

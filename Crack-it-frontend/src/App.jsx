@@ -4,6 +4,10 @@ import Signup from "./components/Signup";
 import Login from "./components/Login";
 import Dashboard from "./components/Dashboard";
 import ProtectedRoute from "./components/ProtectedRoute"; // Import ProtectedRoute
+import HomePage from "./components/HomePage";
+import ProfilePage from "./components/ProfilePage";
+import SettingsPage from "./components/SettingsPage";
+import Task from "./components/Task";
 
 function HealthCheck() {
   const [message, setMessage] = useState("Checking backend...");
@@ -27,19 +31,24 @@ function HealthCheck() {
 function App() {
   return (
     <Router>
-      <div className="container my-5">
+      <div className="page_container_parent my-5">
         <Routes>
           <Route path="/" element={<HealthCheck />} />
           {/* Protect the dashboard route */}
           <Route
             path="/dashboard"
             element={
-              <ProtectedRoute>
+              // <ProtectedRoute>
                 <Dashboard />
-              </ProtectedRoute>
+              // </ProtectedRoute>
             }
           />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/profile" element={<ProfilePage />} />
+          <Route path="/task" element={<Task />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/login" element={<Login />} />
           <Route path="*" element={<h1>404 Not Found</h1>} />
         </Routes>

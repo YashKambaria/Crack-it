@@ -1,0 +1,16 @@
+.dff {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.df-ai {
+    display: flex;
+    align-items: center;
+}
+.df-jc {
+    display: flex;
+    justify-content: center;
+}
+.df {
+    display: flex;
+}
