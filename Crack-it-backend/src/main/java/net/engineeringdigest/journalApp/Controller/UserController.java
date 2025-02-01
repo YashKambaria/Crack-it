@@ -2,6 +2,7 @@ package net.engineeringdigest.journalApp.Controller;
 
 import lombok.extern.slf4j.Slf4j;
 import net.engineeringdigest.journalApp.Entity.UserEntity;
+import net.engineeringdigest.journalApp.Service.OpenAIService;
 import net.engineeringdigest.journalApp.Service.UserService;
 import net.engineeringdigest.journalApp.Util.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -21,15 +21,17 @@ public class JwtUtil {
 	
 	
 	private static String createToken(Map<String, Object> claims, String username) {
-		return Jwts.builder()
+		String token=Jwts.builder()
 				.claims(claims)
 				.subject(username)
 				.header().empty().add("typ","JWT")
 				.and()
 				.issuedAt(new Date(System.currentTimeMillis()))
-				.expiration(new Date(System.currentTimeMillis()+1000*10))
+				.expiration(new Date(System.currentTimeMillis()+1000*100))
 				.signWith(getSigningKey())
 				.compact();
+		System.out.println(token);
+		return token;
 	}
 	
 	public static String extractUsername(String token) {
