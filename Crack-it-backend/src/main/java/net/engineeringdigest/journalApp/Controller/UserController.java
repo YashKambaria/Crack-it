@@ -8,6 +8,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collections;
+
 @RestController
 @Slf4j
 @RequestMapping("/api")
@@ -20,7 +22,10 @@ public class UserController {
 	public ResponseEntity<?> registerUser(@RequestBody UserEntity user) {
 		try {
 			// Handle the received user data
-			System.out.println("Received User: " + user);
+			String validationMessage = userService.validateUser(user);
+			if (validationMessage != null) {
+				return ResponseEntity.badRequest().body(Collections.singletonMap("error", validationMessage));
+			}
 			userService.saveEntry(user);
 			return new ResponseEntity<>(HttpStatus.CREATED);
 		}

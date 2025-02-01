@@ -1,12 +1,12 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import axios from "axios";
 
 const Signup = () => {
-  const navigate = useNavigate(); // Hook for navigation
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
-    username: "", // Changed from name to username
+    username: "",
     email: "",
     phone: "",
     password: "",
@@ -14,23 +14,18 @@ const Signup = () => {
   });
 
   const [errors, setErrors] = useState({});
-  const [userData, setUserData] = useState([]);
-
-  useEffect(() => {
-    console.log(userData);
-  }, [userData]);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setErrors({ ...errors, [e.target.name]: "" }); // Clear error when user types
   };
 
   const validateForm = () => {
     let newErrors = {};
-
     const phoneRegex = /^[6-9]\d{9}$/;
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-    if (!formData.username.trim()) newErrors.username = "Username is required"; // Changed from name to username
+    if (!formData.username.trim()) newErrors.username = "Username is required";
     if (!emailRegex.test(formData.email)) newErrors.email = "Enter a valid email address";
     if (!phoneRegex.test(formData.phone)) newErrors.phone = "Enter a valid 10-digit phone number starting with 6-9";
     if (formData.password.length < 6) newErrors.password = "Password must be at least 6 characters";
@@ -42,47 +37,44 @@ const Signup = () => {
 
   const validateUser = async (userData) => {
     try {
-      const response = await axios.post(
-        "http://localhost:8080/api/register", // Replace with your Spring Boot backend URL
-        userData
-      );
-      console.log(response.data); // Handle success response from backend
-      return true; // Return true if registration is successful
+      const response = await axios.post("http://localhost:8080/api/register", userData);
+
+      console.log(response.data);
+      return { success: true, message: "Registration successful!" };
     } catch (error) {
+      if (error.response && error.response.data && error.response.data.error) {
+        return { success: false, message: error.response.data.error };
+      }
       console.error("Error during registration", error);
-      return false; // Return false if registration fails
+      return { success: false, message: "An unexpected error occurred. Please try again." };
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (validateForm()) {
       const newUser = {
-        username: formData.username, // Changed from name to username
+        username: formData.username,
         email: formData.email,
         phone: formData.phone,
         password: formData.password,
       };
 
-      setUserData((prevData) => [...prevData, newUser]);
+      const result = await validateUser(newUser);
 
-      alert("Signup successful!");
-
-      setFormData({
-        username: "", // Changed from name to username
-        email: "",
-        phone: "",
-        password: "",
-        confirmPassword: "",
-      });
-
-      // Call validateUser (which sends data to backend)
-      const userVerified = await validateUser(newUser); // Send newUser data to backend
-
-      if (userVerified) {
-        navigate("/dashboard"); // Redirect to home if validation passes
+      if (!result.success) {
+        setErrors({ general: result.message });
       } else {
-        navigate("/signup"); // Stay on signup if validation fails
+        alert(result.message);
+        setFormData({
+          username: "",
+          email: "",
+          phone: "",
+          password: "",
+          confirmPassword: "",
+        });
+        navigate("/dashboard");
       }
     }
   };
@@ -95,16 +87,16 @@ const Signup = () => {
             <h2 className="text-center mb-4">Sign Up</h2>
             <form onSubmit={handleSubmit}>
               <div className="mb-3">
-                <label className="form-label">Username</label> {/* Changed label from Full Name to Username */}
+                <label className="form-label">Username</label>
                 <input
                   type="text"
-                  className={`form-control ${errors.username ? "is-invalid" : ""}`} // Changed from name to username
-                  name="username" // Changed from name to username
-                  value={formData.username} // Changed from name to username
+                  className={`form-control ${errors.username ? "is-invalid" : ""}`}
+                  name="username"
+                  value={formData.username}
                   onChange={handleChange}
-                  placeholder="Enter your username" // Changed from Full Name to Username
+                  placeholder="Enter your username"
                 />
-                {errors.username && <div className="invalid-feedback">{errors.username}</div>} {/* Changed from name to username */}
+                {errors.username && <div className="invalid-feedback">{errors.username}</div>}
               </div>
 
               <div className="mb-3">
@@ -156,10 +148,10 @@ const Signup = () => {
                   onChange={handleChange}
                   placeholder="Re-enter your password"
                 />
-                {errors.confirmPassword && (
-                  <div className="invalid-feedback">{errors.confirmPassword}</div>
-                )}
+                {errors.confirmPassword && <div className="invalid-feedback">{errors.confirmPassword}</div>}
               </div>
+
+              {errors.general && <div className="alert alert-danger">{errors.general}</div>}
 
               <button type="submit" className="btn btn-primary w-100">
                 Sign Up
